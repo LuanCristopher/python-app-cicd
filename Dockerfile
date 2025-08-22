@@ -1,0 +1,11 @@
+FROM python:3.9-alpine AS builder
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM python:3.9-alpine
+WORKDIR /app
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY main.py .
+EXPOSE 8080
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
